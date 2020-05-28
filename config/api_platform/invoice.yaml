@@ -1,0 +1,15 @@
+App\Entity\Invoice:
+  attributes:
+      normalization_context:
+          groups: ["invoice:read"]
+  itemOperations:
+    get: ~
+    put: ~
+    patch: ~
+    delete: ~
+    increment:
+      path: /invoices/{id}/increment
+      method: POST
+      controller: App\Controller\IncrementController
+      openapi_context: 
+        summary: Increments the Invoice chrono
