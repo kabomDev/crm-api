@@ -1,14 +1,57 @@
 security:
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+        token_user_provider:
+            entity:
+                class: App\Entity\User
+                property: id
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        login:
+            pattern: /api/login_token
+            anonymous: true
+            stateless: true #plus de suivi sur l'utilisateur
+            provider: app_user_provider
+            json_login:
+                check_path: /api/login_token
+            # guard:
+            #     authenticators:
+            #         - App\Security\UserPasswordTokenAuthenticator
+        api:
+            pattern: /api
             anonymous: lazy
-            provider: users_in_memory
+            stateless: true #plus de suivi sur l'utilisateur
+            provider: token_user_provider
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
+            # guard:
+            #     authenticators:
+            #         - App\Security\ApiKeyAuthenticator
+
+            #manière automatique géré par symfony
+            # json_login:
+            #     check_path: security_login_classic
+            
+            #manière en autonome
+            # guard:
+            #     authenticators:
+            #         - App\Security\ClassicAuthenticator
+
+        main:
+            anonymous: lazy   
+            
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -19,5 +62,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/login_classic, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: ROLE_USER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
