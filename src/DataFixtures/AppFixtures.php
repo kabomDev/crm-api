@@ -24,7 +24,7 @@ class AppFixtures extends AbstractFixture
             $user->setEmail("user$u@gmail.com")
                 ->setFullName($this->faker->name())
                 ->setApiKey("api-$u-key") //partie api key
-                ->setPassword($this->encoder->encodePassword($user, "password"));
+                ->setPassword("password");
         });
 
         //customers

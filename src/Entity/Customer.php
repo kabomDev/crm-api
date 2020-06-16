@@ -82,8 +82,13 @@ class Customer
      */
     public function prePersist()
     {
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+        if (!$this->createdAt) {
+            $this->createdAt = new DateTime();
+        }
+
+        if (!$this->updatedAt) {
+            $this->updatedAt = new DateTime();
+        }
     }
 
     /**

@@ -16,6 +16,11 @@ class InvoiceChronoListener
 
     public function Prepersist(Invoice $invoice)
     {
+        //si il y a deja un numero de facture on fait rien
+        if ($invoice->getChrono()) {
+            return;
+        }
+
         $lastChrono = $this->repository->findLastChrono();
         $invoice->setChrono($lastChrono + 1);
     }

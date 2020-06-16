@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email", message="cet email existe déja")
  */
 class User implements UserInterface
 {
@@ -22,6 +26,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups("user:write")
+     * @Assert\NotBlank(message="l'adresse email est obligatoire")
+     * @Assert\Email(message="l'adresse fournie ne respecte pas le format d'email")
      */
     private $email;
 
@@ -33,11 +40,23 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups("user:write")
+     * @Assert\NotBlank(message="le mot de passe est obligatoire")
+     * @Assert\Length(min=8, minMessage="Le mot de passe doit contenir 8 caractères minimum")
      */
     private $password;
 
     /**
+     * @Groups("user:write")
+     * @Assert\EqualTo(propertyPath="password", message="la confirmation n'est pas égale au mot de passe")
+     */
+    public $confirmation;
+
+    /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("user:write")
+     * @Assert\NotBlank(message="le nom complet est obligatoire")
+     * @Assert\Length(min=5, minMessage="Le nom complet doit contenir 5 caractères minimum")
      */
     private $fullName;
 
