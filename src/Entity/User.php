@@ -61,7 +61,8 @@ class User implements UserInterface
     private $fullName;
 
     /**
-     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user", orphanRemoval=true)
+     * 
      */
     private $customers;
 

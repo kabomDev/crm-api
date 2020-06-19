@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des clients{% endblock %}
+
+{% block body %}
+    <table class="table">
+        <thead>
+            <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Compagny</th>
+            <th>email</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in customers %}
+            <tr>
+            <td>{{c.id}}</td>
+            <td>{{c.fullName}} </td>
+            <td>{{c.company}}</td>
+            <td>{{c.email}}</td>
+            <td>
+                <a href="{{path('customer_edit',{'id': c.id} )}} " class="btn btn-primary">modifier</a>
+                <a href="{{path('customer_delete',{'id': c.id} )}}" class="btn btn-danger">supprimer</a>
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
