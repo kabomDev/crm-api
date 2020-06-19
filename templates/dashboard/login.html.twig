@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<h1>Dashboard</h1>
+
+<ul>
+    <li>Nombre d'utilisateurs: {{users}} </li>
+    <li>Nombre de clients: {{customers}} </li>
+    <li>Nombre de factures: {{invoices}} </li>
+</ul>
+{% endblock %}

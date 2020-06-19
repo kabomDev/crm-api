@@ -18,41 +18,45 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
     login:
       pattern: /api/login_token
-      anonymous: true
-      stateless: true #plus de suivi sur l'utilisateur
       provider: app_user_provider
-      json_login:
-        check_path: /api/login_token
-        #on appelle des classes qui vont gérér les fails et success qui se fait avec le bundle
-        success_handler: lexik_jwt_authentication.handler.authentication_success
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+      anonymous: true
+      stateless: true
+
       # guard:
       #     authenticators:
       #         - App\Security\UserPasswordTokenAuthenticator
+      json_login:
+        check_path: security_login_token
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
       pattern: /api
       anonymous: lazy
-      stateless: true #plus de suivi sur l'utilisateur
+      stateless: true
       provider: app_user_provider
       guard:
         authenticators:
-          #- App\Security\TokenAuthenticator
-          - lexik_jwt_authentication.jwt_token_authenticator #on fait appel au servive du bundle
-      # guard:
-      #     authenticators:
-      #         - App\Security\ApiKeyAuthenticator
-      #manière automatique géré par symfony
-      # json_login:
-      #     check_path: security_login_classic
-      #manière en autonome
-      # guard:
-      #     authenticators:
-      #         - App\Security\ClassicAuthenticator
+          - lexik_jwt_authentication.jwt_token_authenticator
 
     main:
       anonymous: lazy
+      provider: app_user_provider
+      form_login:
+        login_path: admin_security_login
+        check_path: admin_security_login
+      logout:
+        path: admin_security_logout
+      # guard:
+      #     authenticators:
+      #         - App\Security\ApiKeyAuthenticator
+      # json_login:
+      #     check_path: security_login_classic
+      # guard:
+      #     authenticators:
+      #         - App\Security\ClassicAuthenticator
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#firewalls-authentication
       # https://symfony.com/doc/current/security/impersonating_user.html
@@ -63,8 +67,9 @@ security:
   access_control:
     - { path: ^/api/login_classic, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api/login_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api/users$, roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: POST }
+    - { path: ^/api/users$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api, roles: ROLE_USER }
-    # - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/, roles: ROLE_ADMIN }
     # - { path: ^/profile, roles: ROLE_USER }

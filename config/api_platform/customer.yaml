@@ -1,5 +1,6 @@
 App\Entity\Customer: 
   attributes:
+    pagination_enabled: false
     normalization_context:
         groups: ["customer:read"]
   # collectionOperations:

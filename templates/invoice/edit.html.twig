@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% block title %}Edit{% endblock %}
+{% block body %}
+<h1>Modifier une facture</h1>
+{{form_start(editForm)}}
+{{form_widget(editForm)}}
+<button type="submit">modifier</button>
+{{form_end(editForm)}} 
+
+
+{% endblock %}

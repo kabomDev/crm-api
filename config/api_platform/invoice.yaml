@@ -1,5 +1,6 @@
 App\Entity\Invoice:
   attributes:
+      pagination_items_per_page: 10
       normalization_context:
           groups: ["invoice:read"]
   itemOperations:

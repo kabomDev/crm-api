@@ -2,23 +2,33 @@
 
 namespace App\Controller;
 
+use App\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/api/login_classic", name="security_login_classic", methods={"POST"})
+     *@Route("/login", name="admin_security_login") 
      */
-    public function login_classic()
+    public function login(FormFactoryInterface $factory, AuthenticationUtils $utils)
     {
-        $user = $this->getUser();
+        dump($utils->getLastAuthenticationError());
 
-        return $this->json([
-            'username' => $user->getUsername(),
-            'roles' => $user->getRoles(),
-            'message' => 'authentication was successful'
+        $form = $factory->createNamed('', LoginType::class);
+
+        return $this->render('security/index.html.twig', [
+            'form' => $form->createView()
         ]);
+    }
+
+    /**
+     *@Route("/logout" , name="admin_security_logout") 
+     */
+    public function logout()
+    {
     }
 
     /**
@@ -26,13 +36,5 @@ class SecurityController extends AbstractController
      */
     public function token()
     {
-        $user = $this->getUser();
-
-        return $this->json([
-            'username' => $user->getUsername(),
-            'roles' => $user->getRoles(),
-            'message' => 'authentication was successful',
-            'token' => 'token-' . $user->getId()
-        ]);
     }
 }

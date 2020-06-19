@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello InvoiceController!{% endblock %}
+
+{% block body %}
+    <table class="table">
+        <thead>
+            <tr>
+            <th>Id</th>
+            <th>Titre</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Montant</th>
+            <th>Utilisateur</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in invoices %}
+            <tr>
+            <td>{{i.id}}</td>
+            <td>{{i.title}} </td>
+            <td>{{i.customer.fullName}}</td>
+            <td>{{i.createdAt | date }}</td>
+            <td>{{i.amount /100}} € </td>
+            <td>{{i.customer.user.fullName}}</td>
+            <td>
+                <a href="{{path('invoice_edit',{'id': i.id} )}} " class="btn btn-primary">modifier</a>
+                <a href="{{path('invoice_delete',{'id': i.id} )}}" class="btn btn-danger">supprimer</a>
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
